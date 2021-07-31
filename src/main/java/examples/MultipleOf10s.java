@@ -1,4 +1,6 @@
-package net.wushilin.combperm;
+package examples;
+
+import net.wushilin.combperm.CombinationIterable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +18,7 @@ public class MultipleOf10s {
     }
 
     public static boolean isMod10(List<Integer> n) {
-        return n.get(n.size() - 1) % 17 == 0;
+        return n.get(n.size() - 1) % 10 == 0;
     }
     public static List<Integer> sum(List<Integer> list) {
         int sum = 0;
