@@ -16,7 +16,7 @@ public class PermutationIterable<T> extends CombPermBase implements Iterable<Lis
     private int choose;
 
     /**
-     * Create a new full permutation iterable: P(M, M) -> it should have M! iterations.
+     * Create a new full permutation iterable: P(M, M) : it should have M! iterations.
      * @param candidates Candidates to choose from. It must be unique
      */
     public PermutationIterable(List<T> candidates) {

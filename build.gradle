@@ -1,19 +1,93 @@
 plugins {
-    id 'java'
+    id 'maven-publish'
+    id 'signing'
+    id 'java-library'
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
 
 group 'net.wushilin'
-version '1.0-SNAPSHOT'
+version '1.0.0'
+archivesBaseName = "permutation-and-combination"
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+nexusPublishing {
+    repositories {
+        sonatype {
+            //stagingProfileId = sonatypeStagingProfileId
+            username = ossrhUsername
+            password = ossrhPassword
+						nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
 }
 
-test {
-    useJUnitPlatform()
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = "permutation-and-combination"
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'Highly memory efficient java permutation and combination iterator to help you Choose(M, N), and Permutation(M, N) combinations!'
+                description = 'Find out how many combinations are possible out there!'
+                url = 'https://github.com/wushilin/java-permutation-combination'
+                properties = [
+                    myProp: "value",
+                    "prop.with.dots": "anotherValue"
+                ]
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'wushilin'
+                        name = 'Wu Shilin'
+                        email = 'wushilin.sg@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/wushilin/java-permutation-combination.git'
+                    developerConnection = 'scm:git:git://github.com/wushilin/java-permutation-combination.git'
+                    url = 'https://github.com/wushilin/java-permutation-combination'
+                }
+            }
+        }
+    }
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+
+signing {
+    sign publishing.publications.mavenJava
 }
