@@ -4,6 +4,10 @@ import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * Internal class for iterator for combination.
+ * @param <T>
+ */
 class CombinationIterator<T> extends CombPermBase implements Iterator<List<T>> {
     private List<T> candidates;
     private BitSet bitSet;
@@ -14,6 +18,12 @@ class CombinationIterator<T> extends CombPermBase implements Iterator<List<T>> {
 
     }
 
+    /**
+     * Initialize it. It is designed for reusing, so you don't have to reallocate memory.
+     * @param candidates The list candidates
+     * @param choose Number of element to choose
+     * @return itself.
+     */
     public CombinationIterator<T> init(List<T> candidates, int choose) {
         if(candidates == null || choose < 0 || choose > candidates.size()) {
             throw new IllegalArgumentException("Candidates can't be null, choose must between [0, candidates.size]");
@@ -36,7 +46,10 @@ class CombinationIterator<T> extends CombPermBase implements Iterator<List<T>> {
     }
 
 
-
+    /**
+     * Find the smallest possible advancement, the last bits has 01 combination.
+     * @return
+     */
     private int searchForLast01() {
         int lastCheckedSetBit = candidates.size() - 1;
         while (true) {
@@ -54,6 +67,10 @@ class CombinationIterator<T> extends CombPermBase implements Iterator<List<T>> {
         }
     }
 
+    /**
+     * Get the current iteration result from the bitsets
+     * @return The list of elements (the same list!)
+     */
     private List<T> getCurrentResult() {
         resultList.clear();
         for (int i = bitSet.nextSetBit(0); i != -1; i = bitSet.nextSetBit(i + 1)) {
@@ -65,7 +82,7 @@ class CombinationIterator<T> extends CombPermBase implements Iterator<List<T>> {
     /**
      * Shift all set bits to the right hand side.
      *
-     * @param index
+     * @param index the index to the right needs to be shifted
      */
     private void minimize(int index) {
         if (index >= candidates.size()) {
@@ -84,9 +101,10 @@ class CombinationIterator<T> extends CombPermBase implements Iterator<List<T>> {
         }
     }
 
-    /*
+    /**
     Flip the last found 01 to 10 in the bit set (the smallest ever increment that maintains the set number of 1s)
     Then shift all set bits to the right-hand side
+     @param index Flip at this position
      */
     private void flip01(int index) {
         bitSet.set(index);

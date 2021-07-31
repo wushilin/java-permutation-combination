@@ -1,4 +1,6 @@
-package net.wushilin.combperm;
+package examples;
+
+import net.wushilin.combperm.FullPermutationIterator;
 
 import java.util.Arrays;
 
